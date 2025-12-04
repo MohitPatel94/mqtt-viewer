@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MQTT Live Monitor</title>
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+</head>
+<body>
+  <h1>MQTT Live Data Viewer</h1>
+
+  <div>
+    <label>Topic: </label>
+    <input id="topic" value="test/topic">
+    <button onclick="subscribeTopic()">Subscribe</button>
+  </div>
+
+  <h3>Received Messages:</h3>
+  <pre id="output"></pre>
+
+  <script>
+    const client = mqtt.connect("wss://broker.hivemq.com:8884/mqtt");
+
+    client.on("connect", () => {
+      console.log("Connected to MQTT Broker");
+    });
+
+    client.on("message", (topic, message) => {
+      document.getElementById("output").innerText +=
+        topic + " : " + message.toString() + "\n";
+    });
+
+    function subscribeTopic() {
+      let t = document.getElementById("topic").value;
+      client.subscribe(t);
+      alert("Subscribed to: " + t);
+    }
+  </script>
+</body>
+</html>
